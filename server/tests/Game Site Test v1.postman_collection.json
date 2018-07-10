@@ -1,0 +1,1129 @@
+{
+	"info": {
+		"_postman_id": "f22aaf19-2863-441c-b9a0-efd74f1fda64",
+		"name": "Game Site Test v1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create party: invalid game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f2cddf4c-8665-4b40-ac2f-5a75a1ac07d5",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fistbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Create party: null game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "69c90ea8-1482-4695-9dc4-fbef2b77811f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/v1/parties",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Create party: valid fishbowl",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b269a40-b973-43c8-9463-9147d3e6364e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.all.keys('partyId','game','dateAdded','users','teams','__v','_id');",
+							"});",
+							"",
+							"pm.test(\"Test Object types\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.partyId).to.be.a('string');",
+							"    pm.expect(jsonData.game).to.be.a('string');",
+							"    pm.expect(jsonData.users).to.be.a('array');",
+							"    pm.expect(jsonData.teams).to.be.a('array');",
+							"});",
+							"",
+							"",
+							"pm.test(\"test game property is fishbowl\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.game).to.eql(\"fishbowl\");",
+							"});",
+							"",
+							"pm.test(\"test party id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.partyId).to.not.eql(null);",
+							"    pm.expect(jsonData.partyId.length).to.eql(3);",
+							"    pm.environment.set(\"validPartyId\", jsonData.partyId);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Party: invalid partyId",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c06f3d3f-d910-4372-85b5-c75b267374b3",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "35c4f27b-7f0f-4bce-98cb-7544344b19cb",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.not.have.all.keys('partyId','game','dateAdded','users','teams','__v','_id');",
+							"    pm.expect(jsonData).to.have.all.keys('message','type','code');",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"12345"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Party: valid fishbowl",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bed64175-bd39-4096-abf7-0e4962bb12dd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "10b5b63d-04c6-429d-94a7-472bdc255889",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.all.keys('partyId','game','dateAdded','users','teams','__v','_id');",
+							"});",
+							"",
+							"pm.test(\"Test Object types\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.partyId).to.be.a('string');",
+							"    pm.expect(jsonData.game).to.be.a('string');",
+							"    pm.expect(jsonData.users).to.be.a('array');",
+							"    pm.expect(jsonData.teams).to.be.a('array');",
+							"});",
+							"",
+							"",
+							"pm.test(\"test game property is fishbowl\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.game).to.eql(\"fishbowl\");",
+							"});",
+							"",
+							"pm.test(\"test party id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.partyId).to.eql(pm.environment.get(\"validPartyId\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: Invalid Party",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97c182f2-add6-4f69-bbbb-ed8884b10c23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cef2b943-3e2d-4d49-adce-5563691e22b4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.not.have.all.keys('partyId','game','dateAdded','users','teams','__v','_id');",
+							"    pm.expect(jsonData).to.have.all.keys('message','type','code');",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Casey",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/12345/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"12345",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party, null name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97c182f2-add6-4f69-bbbb-ed8884b10c23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4d341982-486d-4dc8-89b3-54e8ffe878e9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message.message).to.include(\"null\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party,  name too short",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97c182f2-add6-4f69-bbbb-ed8884b10c23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b24a02b-dffb-478f-a219-5e3652c62732",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message.message).to.include(\"length\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party,  name too long",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97c182f2-add6-4f69-bbbb-ed8884b10c23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2b56e874-899e-4a7a-80af-b9344477254e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message.message).to.include(\"length\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "George Jefferson",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party & name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "84383706-8179-4bd5-bc22-cf03bd2f3fc4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"validUser0\", \"Casey\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "de074be0-a07c-49f2-9916-f7693388883f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.nModified).to.be.eq(1);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{validUser0}}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party, duplicate name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "97c182f2-add6-4f69-bbbb-ed8884b10c23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4064f235-b98b-4cf8-8aa7-01b850f3d043",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.include(\"exists\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{validUser0}}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Party: valid party check user add",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bed64175-bd39-4096-abf7-0e4962bb12dd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "00696e0e-514c-4e90-abb1-a726a6eef738",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test users list\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.users.length).to.be.eq(1);",
+							"    ",
+							"    pm.expect(jsonData.users[0].name).to.be.eq(pm.environment.get(\"validUser0\"));",
+							"    pm.expect(jsonData.users[0].points).to.be.eq(0);",
+							"    pm.expect(jsonData.users[0].team).to.be.eq(-1);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "AddUser: valid party & name2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2e3217c2-5792-4d59-9d94-ec94811c432e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"validUser1\", \"Jeff\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "de074be0-a07c-49f2-9916-f7693388883f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.nModified).to.be.eq(1);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "{{validUser1}}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}",
+						"users"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Party: valid party check user adds",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bed64175-bd39-4096-abf7-0e4962bb12dd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c750662-00ec-4ac3-9fcf-ef8764ad9924",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test users list\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.users.length).to.be.eq(2);",
+							"",
+							"    for (var iii = 0; iii < 2; iii++) {",
+							"        var username = \"validUser\" + iii;",
+							"        pm.expect(jsonData.users[iii].name).to.be.eq(pm.environment.get(username));",
+							"        pm.expect(jsonData.users[iii].points).to.be.eq(0);",
+							"        pm.expect(jsonData.users[iii].team).to.be.eq(-1);",
+							"    }",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "GetParties",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/party/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"party",
+						""
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete party: invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5a9894a-7f8b-40ac-a2cc-2e161976e255",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/v1/parties/12345",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete party: valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5bd7a13c-bd58-4a00-8d14-db2c5076557f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify valid party no longer exists",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bed64175-bd39-4096-abf7-0e4962bb12dd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "22359f45-f730-4d00-8b17-6944430342e6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Test Object Keys\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.not.have.all.keys('partyId','game','dateAdded','users','teams','__v','_id');",
+							"    pm.expect(jsonData).to.have.all.keys('message','type','code');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "game",
+							"value": "fishbowl",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/parties/{{validPartyId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"parties",
+						"{{validPartyId}}"
+					]
+				},
+				"description": "returns list of all parties"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "39b89ca9-6c2e-4f59-96b4-d7320ee1fc29",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "61502be0-2c61-4fce-b9bd-3e7655f874fb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

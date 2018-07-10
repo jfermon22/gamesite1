@@ -9,7 +9,7 @@ export default function (response, code, message) {
   };
 
   // TODO: implement logging of error
-  console.error(error);
+  // console.error(error);
   response.status(code)
     .send(error);
 }

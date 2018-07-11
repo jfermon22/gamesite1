@@ -1,7 +1,7 @@
 import test from 'ava';
 import request from 'supertest';
 import app from '../../server';
-import Party from '../partySchema';
+import Party from '../party';
 import { connectDB, dropDB } from '../../util/test-helpers';
 
 // Initial partys added into test db
@@ -15,7 +15,7 @@ test.before('connect to mockgoose', async () => {
 });
 
 test.beforeEach('connect and add two party entries', async () => {
-  await party.create(partys).catch(() => 'Unable to create partys');
+  await Party.create(partys).catch(() => 'Unable to create partys');
 });
 
 test.afterEach.always(async () => {
@@ -36,7 +36,7 @@ test.serial('Should correctly give number of partys', async t => {
 test.serial('Should send correct data when queried against a cuid', async t => {
   t.plan(2);
 
-  const party = new party({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
+  const party = new Party({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
   party.save();
 
   const res = await request(app)
@@ -57,14 +57,14 @@ test.serial('Should correctly add a party', async t => {
 
   t.is(res.status, 200);
 
-  const savedparty = await party.findOne({ title: 'bar' }).exec();
+  const savedparty = await Party.findOne({ title: 'bar' }).exec();
   t.is(savedparty.name, 'Foo');
 });
 
 test.serial('Should correctly delete a party', async t => {
   t.plan(2);
 
-  const party = new party({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
+  const party = new Party({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
   party.save();
 
   const res = await request(app)

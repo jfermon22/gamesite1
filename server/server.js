@@ -3,14 +3,28 @@ import compression from 'compression';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
-import IntlWrapper from '../client/modules/Intl/IntlWrapper';
+// React And Redux Setup
+import { Provider } from 'react-redux';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
+import Helmet from 'react-helmet';
+import { configureStore } from '../client/store';
+import intlWrapper from '../client/modules/Intl/IntlWrapper';
+// Import required modules
+import routes from '../client/routes';
+import { fetchComponentData } from './util/fetchData';
+import parties from './routes/v1/party.routes';
+import initDb from './initDb';
+import serverConfig from './config';
 
 // Initialize the Express App
 const app = new Express();
-
 // Set Development modes checks
 const isDevMode = process.env.NODE_ENV === 'development' || false;
 const isProdMode = process.env.NODE_ENV === 'production' || false;
+// define a constant for the API we are using
+const ROUTES_VERSION = '1';
 
 // Run Webpack dev server in development mode
 if (isDevMode) {
@@ -34,22 +48,6 @@ if (isDevMode) {
   app.use(webpackHotMiddleware(compiler));
 }
 
-// React And Redux Setup
-import { configureStore } from '../client/store';
-import { Provider } from 'react-redux';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
-import Helmet from 'react-helmet';
-
-// Import required modules
-import routes from '../client/routes';
-import { fetchComponentData } from './util/fetchData';
-import { ROUTES_VERSION } from './routes/routesVersion';
-import parties from './routes/party.routes';
-import initDb from './initDb';
-import serverConfig from './config';
-
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
 
@@ -61,7 +59,6 @@ if (process.env.NODE_ENV !== 'test') {
       throw error;
     }
 
-    // init the session tracker to 0
     initDb();
   });
 }
@@ -75,6 +72,7 @@ app.use(`/v${ROUTES_VERSION}`, parties);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
+  void initialState;
   const head = Helmet.rewind();
 
   // Import Manifests
@@ -104,10 +102,11 @@ const renderFullPage = (html, initialState) => {
   `;
 };
 
-const renderError = err => {
+const renderError = (err) => {
   const softTab = '&#32;&#32;&#32;&#32;';
-  const errTrace = isProdMode ?
-    `:<br><br><pre style="color:red">${softTab}${err.stack.replace(/\n/g, `<br>${softTab}`)}</pre>` : '';
+  const errTrace = isProdMode
+    ? `:<br><br><pre style="color:red">${softTab}${err.stack.replace(/\n/g, `<br>${softTab}`)}</pre>`
+    : '';
   return renderFullPage(`Server Error${errTrace}`, {});
 };
 
@@ -136,9 +135,9 @@ app.use((req, res, next) => {
       .then(() => {
         const initialView = renderToString(
           <Provider store={store}>
-            <IntlWrapper>
+            <intlWrapper>
               <RouterContext {...renderProps} />
-            </IntlWrapper >
+            </intlWrapper>
           </Provider>
         );
         const finalState = store.getState();
@@ -148,7 +147,7 @@ app.use((req, res, next) => {
           .status(200)
           .end(renderFullPage(initialView, finalState));
       })
-      .catch((error) => next(error));
+      .catch(error => next(error));
   });
 });
 

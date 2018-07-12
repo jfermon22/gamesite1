@@ -1,5 +1,5 @@
 import Party from '../models/party';
-import errHandler from '../util/errorhandler';
+import errHandler from '../util/errorHandler';
 
 const HttpStatus = require('http-status-codes');
 

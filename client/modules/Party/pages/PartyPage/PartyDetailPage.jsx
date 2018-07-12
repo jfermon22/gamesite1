@@ -17,7 +17,7 @@ export function PartyDetailPage(props) {
     <div>
       <Helmet title={props.party.title} />
        <div className={`${styles['single-post']} ${styles['post-detail']}`}>
-        <h3 }>{props.party.id}</h3>
+        <h3>{props.party.id}</h3>
         <p className={styles['author-name']}><FormattedMessage id="by" /> {props.post.name}</p>
         <p className={styles['post-desc']}>{props.post.content}</p>
       </div>
@@ -38,7 +38,7 @@ function mapStateToProps(state, props) {
 }
 
 PartyDetailPage.propTypes = {
-party: PropTypes.shape({
+  party: PropTypes.shape({
     name: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,

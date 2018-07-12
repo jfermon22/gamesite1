@@ -7,8 +7,10 @@ import styles from './Header.css';
 
 export function Header(props, context) {
   const languageNodes = props.intl.enabledLanguages.map(
-    lang => <li key={lang} onClick={() =>
-      props.switchLanguage(lang)} className={lang === props.intl.locale ? styles.selected : ''}>{lang}</li>
+    lang =>
+    <li key={lang}
+      onClick={() => props.switchLanguage(lang)} className={lang === props.intl.locale ? styles.selected : ''}
+    >{lang}</li>
   );
 
   return (

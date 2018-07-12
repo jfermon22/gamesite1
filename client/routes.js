@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import App from './modules/App/App';
+import app from './modules/App/App';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -21,18 +21,18 @@ if (process.env.NODE_ENV !== 'production') {
 // react-router setup with code-splitting
 // More info: http://blog.mxstbr.com/2016/01/react-apps-with-pages/
 export default (
-  <Route path="/" component={App}>
+  <Route path="/" component={app}>
     <IndexRoute
       getComponent={(nextState, cb) => {
-        require.ensure([], require => {
+        require.ensure([], (require) => {
           cb(null, require('./modules/App/App').default);
         });
       }}
     />
     <Route
-      path="/party/:partyid-:username"
+      path="/party/:partyid/users/:username"
       getComponent={(nextState, cb) => {
-        require.ensure([], require => {
+        require.ensure([], (require) => {
           cb(null, require('./modules/App/App').default);
         });
       }}

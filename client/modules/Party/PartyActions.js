@@ -8,7 +8,7 @@ export const GET_PARTY = 'GET_PARTY';
 export function fetchParty(partyId) {
   return (dispatch) => {
     return callApi('party').then(res => {
-      dispatch(addPosts(res.posts));
+      dispatch(addParty(res.party));
     });
   };
 }

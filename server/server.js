@@ -13,9 +13,6 @@ import serverConfig from './config';
 // Initialize the Express App
 const app = new Express();
 
-// define a constant for the API we are using
-// const ROUTES_VERSION = '1';
-
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
 

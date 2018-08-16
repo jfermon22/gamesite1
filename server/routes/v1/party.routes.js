@@ -7,6 +7,7 @@ const router = new Router();
 
 // Root parties router
 router.route( '/' )
+  .get( PartyController.getRoot )
   .post( PartyController.addParty );
 
 // party ID router
@@ -29,8 +30,9 @@ router.route( '/:partyId/teams/' )
 router.route( '/:partyId/users/:userName' )
   .put( PartyController.updateUser );
 
-// Users router
+// data router
 router.route( '/:partyId/data/' )
-  .post( PartyController.addData );
+  .post( PartyController.addData )
+  .delete( PartyController.deleteData );
 
 export default router;

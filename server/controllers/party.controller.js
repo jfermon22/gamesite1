@@ -219,17 +219,16 @@ function updateUserHelper( username, score, team, party ) {
   return result;
 }
 /**
- * Get all parties
+ * Get root
  * @param req
  * @param res
  * @returns void
  */
-/* export function getParties(req, res) {
-  Party.find().sort('-dateAdded').exec((err, parties) => {
-    if (err) errHandler(res, HttpStatus.INTERNAL_SERVER_ERROR, err);
-    else res.send(parties);
-  });
-}*/
+export function getRoot( req, res ) {
+  res.send( {
+    message: "Welcome to api V1"
+  } );
+}
 
 /**
  * Add a party
@@ -452,6 +451,7 @@ export function addUser( req, res ) {
       }
     } );
 }
+
 /**
  * Update teams in the party
  * @param req
@@ -580,6 +580,8 @@ export function updateUser( req, res ) {
  * @returns void
  */
 export function addData( req, res ) {
+  const reqPartyId = req.params.partyId;
+
   findOneParty( reqPartyId )
     .then( ( party ) => {
       if ( party == null ) {
@@ -587,26 +589,20 @@ export function addData( req, res ) {
           `partyId: ${reqPartyId} not found` );
       } else {
 
-        //call helper to get and updateuser values in model
-        var result = updateUserHelper( reqUserName, req.body
-          .score, req.body.team, party );
-
-        //check the return to see if error occured
-        if ( !result.valid ) {
+        if ( !req.body.gameData ) {
           throw new responseException( res, HttpStatus.BAD_REQUEST,
-            result.message );
+            `gameData is null`
+          );
         }
 
-        //get the updated user data
-        var updatedUser = result.message;
-
-        // update the user
+        // update the gamedata
         return Party.update( {
-          _id: party._id,
-          'users._id': updatedUser._id
+          _id: party._id
         }, {
-          $set: {
-            "users.$": updatedUser
+          $push: {
+            gameData: {
+              $each: req.body.gameData
+            }
           }
         } );
       }
@@ -614,7 +610,46 @@ export function addData( req, res ) {
     .then( ( rawResult ) => {
       if ( !rawResult.nModified ) {
         errHandler( res, HttpStatus.CONFLICT,
-          `name: ${newUser.name} exists in party` );
+          `gameData: ${req.body.gameData} exists in party` );
+      } else {
+        res.status( HttpStatus.OK )
+          .send( rawResult );
+      }
+    } )
+    .catch( ( err ) => {
+      if ( err instanceof responseException ) {
+        errHandler( err.res, err.code, err.message );
+      } else {
+        errHandler( res, HttpStatus.INTERNAL_SERVER_ERROR, err );
+      }
+    } );
+}
+
+
+export function deleteData( req, res ) {
+  const reqPartyId = req.params.partyId;
+
+  findOneParty( reqPartyId )
+    .then( ( party ) => {
+      if ( party == null ) {
+        throw new responseException( res, HttpStatus.BAD_REQUEST,
+          `partyId: ${reqPartyId} not found` );
+      } else {
+        // update the user
+        return Party.update( {
+          _id: party._id,
+        }, {
+          $set: {
+            "gameData": []
+          }
+        } );
+
+      }
+    } )
+    .then( ( rawResult ) => {
+      if ( !rawResult.nModified ) {
+        errHandler( res, HttpStatus.CONFLICT,
+          `gameData not found in party` );
       } else {
         res.status( HttpStatus.OK )
           .send( rawResult );

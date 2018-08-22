@@ -36,7 +36,7 @@ app.use(Express.static(path.resolve(__dirname, '../dist/client')));
 
 // define route paths
 app.use('/', routes);
-app.use('/v1/parties', parties);
+app.use('/v1/party', parties);
 
 // start app
 app.listen(serverConfig.port, (error) => {

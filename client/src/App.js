@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+//import { BrowserRouter } from 'react-router-dom'
 import NewUserForm from './components/NewUserForm.js';
 
 class App extends Component {
@@ -9,25 +10,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this
-      .callApi()
-      .then( res => {
-        this.setState( { response: res.message } )
-      } )
-      .catch( err => {
-        console.log( err )
-        this.setState( this.response = err )
-      } );
-  }
-
-  callApi = async () => {
-    const response = await fetch( '/v1' );
-    const body = await response.json();
-
-    if ( response.status !== 200 ) 
-      throw Error( body.message );
-    
-    return body;
 
   }
 
@@ -39,9 +21,6 @@ class App extends Component {
           Welcome to React
         </h1>
       </header>
-      <p className="App-intro">
-        {this.state.response}
-      </p>
       <NewUserForm/>
     </div > );
   }

@@ -299,79 +299,6 @@ export function getParty( req, res ) {
 }
 
 /**
- * Update a party
- * @param req
- * @param res
- * @returns void
- */
-/*export function updateParty( req, res ) {
-  const reqPartyId = req.params.partyId;
-  const TEAMS_COUNT = 2;
-
-  findOneParty( reqPartyId )
-    .then( ( party ) => {
-      if ( party == null ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          `partyId: ${reqPartyId} not found` );
-      } else if ( party.teams.length != 0 ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          `party: ${reqPartyId} has already defined teams: ${party.teams}`
-        );
-      } else if ( !req.body.teamNames ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          'team names in body of request is null' );
-      } else if ( req.body.teamNames.length != TEAMS_COUNT ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          `inappropriate number of teams defined:\
-            ${req.body.teamNames.length}. Expected: ${TEAMS_COUNT}`
-        );
-      } else if ( req.body.teamNames[ 0 ].length <= 0 || req.body
-        .teamNames[
-          0 ].length >= 15 ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          `inappropriate length of team name : ${req.body.teamNames[0]}.\
-            ${req.body.teamNames[0].length}. Expected: 0-15`
-        );
-      } else if ( req.body.teamNames[ 1 ].length <= 0 || req.body
-        .teamNames[
-          1 ].length >= 15 ) {
-        throw new responseException( res, HttpStatus.BAD_REQUEST,
-          `inappropriate length of team name : ${req.body.teamNames[1]}.\
-            ${req.body.teamNames[1].length}. Expected: 0-15`
-        );
-      } else {
-        // party was found,so update it
-        const reqTeamNames = req.body.teamNames;
-        return Party.update( {
-          _id: party._id
-        }, {
-          $push: {
-            teams: {
-              $each: reqTeamNames
-            }
-          }
-        } );
-      }
-    } )
-    .then( ( rawResult ) => {
-      if ( !rawResult.nModified ) {
-        errHandler( res, HttpStatus.CONFLICT,
-          `team names: ${reqTeamNames} not added to party` );
-      } else {
-        res.status( HttpStatus.OK )
-          .send( rawResult );
-      }
-    } )
-    .catch( ( err ) => {
-      if ( err instanceof responseException ) {
-        errHandler( err.res, err.code, err.message );
-      } else {
-        errHandler( res, HttpStatus.INTERNAL_SERVER_ERROR, err );
-      }
-    } );
-}
-*/
-/**
  * Delete a party
  * @param req
  * @param res
@@ -400,17 +327,16 @@ export function deleteParty( req, res ) {
  */
 export function addUser( req, res ) {
   const reqPartyId = req.params.partyId;
-  const newUserName = req.body.name;
 
   // validate username
-  const result = verifyUserName( newUserName );
+  const result = verifyUserName(  req.body.name );
   if ( !result.valid ) {
     errHandler( res, HttpStatus.BAD_REQUEST, result );
     return;
   }
 
   const newUser = {
-    name: newUserName,
+    name: req.body.name,
     team: -1,
     points: 0,
   };
